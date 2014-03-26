@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="team14Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Facilities">
+          <Key>
+            <PropertyRef Name="FacilityID" />
+          </Key>
+          <Property Name="FacilityID" Type="int" Nullable="false" />
+          <Property Name="FacilityName" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Modules">
+          <Key>
+            <PropertyRef Name="ModuleID" />
+          </Key>
+          <Property Name="ModuleID" Type="int" Nullable="false" />
+          <Property Name="ModuleCode" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="ModuleTitle" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="RequestID" />
+          </Key>
+          <Property Name="RequestID" Type="int" Nullable="false" />
+          <Property Name="ModuleID" Type="varchar" MaxLength="255" />
+          <Property Name="Status" Type="varchar" MaxLength="255" />
+          <Property Name="StudentsReq" Type="int" />
+          <Property Name="Semester" Type="int" Nullable="false" />
+          <Property Name="Weeks" Type="int" />
+          <Property Name="Days" Type="int" />
+          <Property Name="Periods" Type="int" />
+          <Property Name="Years" Type="int" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="SpecialReq" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RequestFacilities">
+          <Key>
+            <PropertyRef Name="RequestID" />
+          </Key>
+          <Property Name="RequestID" Type="int" Nullable="false" />
+          <Property Name="FacilityID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RoomPreference">
+          <Key>
+            <PropertyRef Name="RoomID" />
+          </Key>
+          <Property Name="RoomID" Type="int" Nullable="false" />
+          <Property Name="RequestID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rooms">
+          <Key>
+            <PropertyRef Name="RoomID" />
+          </Key>
+          <Property Name="RoomID" Type="int" Nullable="false" />
+          <Property Name="RoomCode" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Capacity" Type="int" Nullable="false" />
+          <Property Name="BuildingID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Request_RequestFacilities">
+          <End Role="Request" Type="Self.Request" Multiplicity="1" />
+          <End Role="RequestFacilities" Type="Self.RequestFacilities" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="RequestID" />
+            </Principal>
+            <Dependent Role="RequestFacilities">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RequestFacilities_Facilities">
+          <End Role="Facilities" Type="Self.Facilities" Multiplicity="1" />
+          <End Role="RequestFacilities" Type="Self.RequestFacilities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Facilities">
+              <PropertyRef Name="FacilityID" />
+            </Principal>
+            <Dependent Role="RequestFacilities">
+              <PropertyRef Name="FacilityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoomPreference_Request">
+          <End Role="Request" Type="Self.Request" Multiplicity="1" />
+          <End Role="RoomPreference" Type="Self.RoomPreference" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Request">
+              <PropertyRef Name="RequestID" />
+            </Principal>
+            <Dependent Role="RoomPreference">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoomPreference_Rooms">
+          <End Role="Rooms" Type="Self.Rooms" Multiplicity="1" />
+          <End Role="RoomPreference" Type="Self.RoomPreference" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Rooms">
+              <PropertyRef Name="RoomID" />
+            </Principal>
+            <Dependent Role="RoomPreference">
+              <PropertyRef Name="RoomID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="team14ModelStoreContainer">
+          <EntitySet Name="Facilities" EntityType="Self.Facilities" Schema="team14" store:Type="Tables" />
+          <EntitySet Name="Modules" EntityType="Self.Modules" Schema="team14" store:Type="Tables" />
+          <EntitySet Name="Request" EntityType="Self.Request" Schema="team14" store:Type="Tables" />
+          <EntitySet Name="RequestFacilities" EntityType="Self.RequestFacilities" Schema="team14" store:Type="Tables" />
+          <EntitySet Name="RoomPreference" EntityType="Self.RoomPreference" Schema="team14" store:Type="Tables" />
+          <EntitySet Name="Rooms" EntityType="Self.Rooms" Schema="team14" store:Type="Tables" />
+          <AssociationSet Name="FK_Request_RequestFacilities" Association="Self.FK_Request_RequestFacilities">
+            <End Role="Request" EntitySet="Request" />
+            <End Role="RequestFacilities" EntitySet="RequestFacilities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RequestFacilities_Facilities" Association="Self.FK_RequestFacilities_Facilities">
+            <End Role="Facilities" EntitySet="Facilities" />
+            <End Role="RequestFacilities" EntitySet="RequestFacilities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoomPreference_Request" Association="Self.FK_RoomPreference_Request">
+            <End Role="Request" EntitySet="Request" />
+            <End Role="RoomPreference" EntitySet="RoomPreference" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoomPreference_Rooms" Association="Self.FK_RoomPreference_Rooms">
+            <End Role="Rooms" EntitySet="Rooms" />
+            <End Role="RoomPreference" EntitySet="RoomPreference" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="team14Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Facility">
+          <Key>
+            <PropertyRef Name="FacilityID" />
+          </Key>
+          <Property Name="FacilityID" Type="Int32" Nullable="false" />
+          <Property Name="FacilityName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Requests" Relationship="Self.RequestFacilities" FromRole="Facilities" ToRole="Request" />
+        </EntityType>
+        <EntityType Name="Module">
+          <Key>
+            <PropertyRef Name="ModuleID" />
+          </Key>
+          <Property Name="ModuleID" Type="Int32" Nullable="false" />
+          <Property Name="ModuleCode" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ModuleTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="RequestID" />
+          </Key>
+          <Property Name="RequestID" Type="Int32" Nullable="false" />
+          <Property Name="ModuleID" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="StudentsReq" Type="Int32" />
+          <Property Name="Semester" Type="Int32" Nullable="false" />
+          <Property Name="Weeks" Type="Int32" />
+          <Property Name="Days" Type="Int32" />
+          <Property Name="Periods" Type="Int32" />
+          <Property Name="Years" Type="Int32" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="SpecialReq" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Facility" Relationship="Self.RequestFacilities" FromRole="Request" ToRole="Facilities" />
+          <NavigationProperty Name="Rooms" Relationship="Self.RoomPreference" FromRole="Request" ToRole="Rooms" />
+        </EntityType>
+        <EntityType Name="Room">
+          <Key>
+            <PropertyRef Name="RoomID" />
+          </Key>
+          <Property Name="RoomID" Type="Int32" Nullable="false" />
+          <Property Name="RoomCode" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Capacity" Type="Int32" Nullable="false" />
+          <Property Name="BuildingID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Request" Relationship="Self.RoomPreference" FromRole="Rooms" ToRole="Request" />
+        </EntityType>
+        <Association Name="RequestFacilities">
+          <End Role="Request" Type="Self.Request" Multiplicity="*" />
+          <End Role="Facilities" Type="Self.Facility" Multiplicity="0..1" />
+        </Association>
+        <Association Name="RoomPreference">
+          <End Role="Request" Type="Self.Request" Multiplicity="0..1" />
+          <End Role="Rooms" Type="Self.Room" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="team14Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Facilities" EntityType="Self.Facility" />
+          <EntitySet Name="Modules" EntityType="Self.Module" />
+          <EntitySet Name="Requests" EntityType="Self.Request" />
+          <EntitySet Name="Rooms" EntityType="Self.Room" />
+          <AssociationSet Name="RequestFacilities" Association="Self.RequestFacilities">
+            <End Role="Request" EntitySet="Requests" />
+            <End Role="Facilities" EntitySet="Facilities" />
+          </AssociationSet>
+          <AssociationSet Name="RoomPreference" Association="Self.RoomPreference">
+            <End Role="Request" EntitySet="Requests" />
+            <End Role="Rooms" EntitySet="Rooms" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="team14ModelStoreContainer" CdmEntityContainer="team14Entities">
+          <EntitySetMapping Name="Facilities">
+            <EntityTypeMapping TypeName="team14Model.Facility">
+              <MappingFragment StoreEntitySet="Facilities">
+                <ScalarProperty Name="FacilityID" ColumnName="FacilityID" />
+                <ScalarProperty Name="FacilityName" ColumnName="FacilityName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Modules">
+            <EntityTypeMapping TypeName="team14Model.Module">
+              <MappingFragment StoreEntitySet="Modules">
+                <ScalarProperty Name="ModuleID" ColumnName="ModuleID" />
+                <ScalarProperty Name="ModuleCode" ColumnName="ModuleCode" />
+                <ScalarProperty Name="ModuleTitle" ColumnName="ModuleTitle" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requests">
+            <EntityTypeMapping TypeName="team14Model.Request">
+              <MappingFragment StoreEntitySet="Request">
+                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+                <ScalarProperty Name="ModuleID" ColumnName="ModuleID" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StudentsReq" ColumnName="StudentsReq" />
+                <ScalarProperty Name="Semester" ColumnName="Semester" />
+                <ScalarProperty Name="Weeks" ColumnName="Weeks" />
+                <ScalarProperty Name="Days" ColumnName="Days" />
+                <ScalarProperty Name="Periods" ColumnName="Periods" />
+                <ScalarProperty Name="Years" ColumnName="Years" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="SpecialReq" ColumnName="SpecialReq" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rooms">
+            <EntityTypeMapping TypeName="team14Model.Room">
+              <MappingFragment StoreEntitySet="Rooms">
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="RoomCode" ColumnName="RoomCode" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="BuildingID" ColumnName="BuildingID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="RequestFacilities" TypeName="team14Model.RequestFacilities" StoreEntitySet="RequestFacilities">
+            <EndProperty Name="Request">
+              <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+            </EndProperty>
+            <EndProperty Name="Facilities">
+              <ScalarProperty Name="FacilityID" ColumnName="FacilityID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="RoomPreference" TypeName="team14Model.RoomPreference" StoreEntitySet="RoomPreference">
+            <EndProperty Name="Request">
+              <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+            </EndProperty>
+            <EndProperty Name="Rooms">
+              <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
